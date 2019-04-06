@@ -32,9 +32,18 @@ public final class CoordinateInfo {
      * 用户id  
      * </pre>
      *
-     * <code>int32 userId = 2;</code>
+     * <code>string phone = 2;</code>
      */
-    int getUserId();
+    String getPhone();
+    /**
+     * <pre>
+     * 用户id  
+     * </pre>
+     *
+     * <code>string phone = 2;</code>
+     */
+    com.google.protobuf.ByteString
+        getPhoneBytes();
 
     /**
      * <pre>
@@ -62,6 +71,31 @@ public final class CoordinateInfo {
      * <code>int32 state = 4;</code>
      */
     int getState();
+
+    /**
+     * <pre>
+     *时间
+     * </pre>
+     *
+     * <code>.google.protobuf.Timestamp Time = 5;</code>
+     */
+    boolean hasTime();
+    /**
+     * <pre>
+     *时间
+     * </pre>
+     *
+     * <code>.google.protobuf.Timestamp Time = 5;</code>
+     */
+    com.google.protobuf.Timestamp getTime();
+    /**
+     * <pre>
+     *时间
+     * </pre>
+     *
+     * <code>.google.protobuf.Timestamp Time = 5;</code>
+     */
+    com.google.protobuf.TimestampOrBuilder getTimeOrBuilder();
   }
   /**
    * Protobuf type {@code CoordinateMsg}
@@ -77,7 +111,7 @@ public final class CoordinateInfo {
     }
     private CoordinateMsg() {
       id_ = 0;
-      userId_ = 0;
+      phone_ = "";
       coordinate_ = "";
       state_ = 0;
     }
@@ -111,9 +145,10 @@ public final class CoordinateInfo {
               id_ = input.readInt32();
               break;
             }
-            case 16: {
+            case 18: {
+              String s = input.readStringRequireUtf8();
 
-              userId_ = input.readInt32();
+              phone_ = s;
               break;
             }
             case 26: {
@@ -125,6 +160,19 @@ public final class CoordinateInfo {
             case 32: {
 
               state_ = input.readInt32();
+              break;
+            }
+            case 42: {
+              com.google.protobuf.Timestamp.Builder subBuilder = null;
+              if (time_ != null) {
+                subBuilder = time_.toBuilder();
+              }
+              time_ = input.readMessage(com.google.protobuf.Timestamp.parser(), extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom(time_);
+                time_ = subBuilder.buildPartial();
+              }
+
               break;
             }
             default: {
@@ -172,17 +220,46 @@ public final class CoordinateInfo {
       return id_;
     }
 
-    public static final int USERID_FIELD_NUMBER = 2;
-    private int userId_;
+    public static final int PHONE_FIELD_NUMBER = 2;
+    private volatile Object phone_;
     /**
      * <pre>
      * 用户id  
      * </pre>
      *
-     * <code>int32 userId = 2;</code>
+     * <code>string phone = 2;</code>
      */
-    public int getUserId() {
-      return userId_;
+    public String getPhone() {
+      Object ref = phone_;
+      if (ref instanceof String) {
+        return (String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        String s = bs.toStringUtf8();
+        phone_ = s;
+        return s;
+      }
+    }
+    /**
+     * <pre>
+     * 用户id  
+     * </pre>
+     *
+     * <code>string phone = 2;</code>
+     */
+    public com.google.protobuf.ByteString
+        getPhoneBytes() {
+      Object ref = phone_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (String) ref);
+        phone_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
     }
 
     public static final int COORDINATE_FIELD_NUMBER = 3;
@@ -240,6 +317,39 @@ public final class CoordinateInfo {
       return state_;
     }
 
+    public static final int TIME_FIELD_NUMBER = 5;
+    private com.google.protobuf.Timestamp time_;
+    /**
+     * <pre>
+     *时间
+     * </pre>
+     *
+     * <code>.google.protobuf.Timestamp Time = 5;</code>
+     */
+    public boolean hasTime() {
+      return time_ != null;
+    }
+    /**
+     * <pre>
+     *时间
+     * </pre>
+     *
+     * <code>.google.protobuf.Timestamp Time = 5;</code>
+     */
+    public com.google.protobuf.Timestamp getTime() {
+      return time_ == null ? com.google.protobuf.Timestamp.getDefaultInstance() : time_;
+    }
+    /**
+     * <pre>
+     *时间
+     * </pre>
+     *
+     * <code>.google.protobuf.Timestamp Time = 5;</code>
+     */
+    public com.google.protobuf.TimestampOrBuilder getTimeOrBuilder() {
+      return getTime();
+    }
+
     private byte memoizedIsInitialized = -1;
     @Override
     public final boolean isInitialized() {
@@ -257,14 +367,17 @@ public final class CoordinateInfo {
       if (id_ != 0) {
         output.writeInt32(1, id_);
       }
-      if (userId_ != 0) {
-        output.writeInt32(2, userId_);
+      if (!getPhoneBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 2, phone_);
       }
       if (!getCoordinateBytes().isEmpty()) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 3, coordinate_);
       }
       if (state_ != 0) {
         output.writeInt32(4, state_);
+      }
+      if (time_ != null) {
+        output.writeMessage(5, getTime());
       }
       unknownFields.writeTo(output);
     }
@@ -279,9 +392,8 @@ public final class CoordinateInfo {
         size += com.google.protobuf.CodedOutputStream
           .computeInt32Size(1, id_);
       }
-      if (userId_ != 0) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeInt32Size(2, userId_);
+      if (!getPhoneBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, phone_);
       }
       if (!getCoordinateBytes().isEmpty()) {
         size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, coordinate_);
@@ -289,6 +401,10 @@ public final class CoordinateInfo {
       if (state_ != 0) {
         size += com.google.protobuf.CodedOutputStream
           .computeInt32Size(4, state_);
+      }
+      if (time_ != null) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(5, getTime());
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -308,12 +424,17 @@ public final class CoordinateInfo {
       boolean result = true;
       result = result && (getId()
           == other.getId());
-      result = result && (getUserId()
-          == other.getUserId());
+      result = result && getPhone()
+          .equals(other.getPhone());
       result = result && getCoordinate()
           .equals(other.getCoordinate());
       result = result && (getState()
           == other.getState());
+      result = result && (hasTime() == other.hasTime());
+      if (hasTime()) {
+        result = result && getTime()
+            .equals(other.getTime());
+      }
       result = result && unknownFields.equals(other.unknownFields);
       return result;
     }
@@ -327,12 +448,16 @@ public final class CoordinateInfo {
       hash = (19 * hash) + getDescriptor().hashCode();
       hash = (37 * hash) + ID_FIELD_NUMBER;
       hash = (53 * hash) + getId();
-      hash = (37 * hash) + USERID_FIELD_NUMBER;
-      hash = (53 * hash) + getUserId();
+      hash = (37 * hash) + PHONE_FIELD_NUMBER;
+      hash = (53 * hash) + getPhone().hashCode();
       hash = (37 * hash) + COORDINATE_FIELD_NUMBER;
       hash = (53 * hash) + getCoordinate().hashCode();
       hash = (37 * hash) + STATE_FIELD_NUMBER;
       hash = (53 * hash) + getState();
+      if (hasTime()) {
+        hash = (37 * hash) + TIME_FIELD_NUMBER;
+        hash = (53 * hash) + getTime().hashCode();
+      }
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -468,12 +593,18 @@ public final class CoordinateInfo {
         super.clear();
         id_ = 0;
 
-        userId_ = 0;
+        phone_ = "";
 
         coordinate_ = "";
 
         state_ = 0;
 
+        if (timeBuilder_ == null) {
+          time_ = null;
+        } else {
+          time_ = null;
+          timeBuilder_ = null;
+        }
         return this;
       }
 
@@ -501,9 +632,14 @@ public final class CoordinateInfo {
       public CoordinateMsg buildPartial() {
         CoordinateMsg result = new CoordinateMsg(this);
         result.id_ = id_;
-        result.userId_ = userId_;
+        result.phone_ = phone_;
         result.coordinate_ = coordinate_;
         result.state_ = state_;
+        if (timeBuilder_ == null) {
+          result.time_ = time_;
+        } else {
+          result.time_ = timeBuilder_.build();
+        }
         onBuilt();
         return result;
       }
@@ -555,8 +691,9 @@ public final class CoordinateInfo {
         if (other.getId() != 0) {
           setId(other.getId());
         }
-        if (other.getUserId() != 0) {
-          setUserId(other.getUserId());
+        if (!other.getPhone().isEmpty()) {
+          phone_ = other.phone_;
+          onChanged();
         }
         if (!other.getCoordinate().isEmpty()) {
           coordinate_ = other.coordinate_;
@@ -564,6 +701,9 @@ public final class CoordinateInfo {
         }
         if (other.getState() != 0) {
           setState(other.getState());
+        }
+        if (other.hasTime()) {
+          mergeTime(other.getTime());
         }
         this.mergeUnknownFields(other.unknownFields);
         onChanged();
@@ -632,27 +772,60 @@ public final class CoordinateInfo {
         return this;
       }
 
-      private int userId_ ;
+      private Object phone_ = "";
       /**
        * <pre>
        * 用户id  
        * </pre>
        *
-       * <code>int32 userId = 2;</code>
+       * <code>string phone = 2;</code>
        */
-      public int getUserId() {
-        return userId_;
+      public String getPhone() {
+        Object ref = phone_;
+        if (!(ref instanceof String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          String s = bs.toStringUtf8();
+          phone_ = s;
+          return s;
+        } else {
+          return (String) ref;
+        }
       }
       /**
        * <pre>
        * 用户id  
        * </pre>
        *
-       * <code>int32 userId = 2;</code>
+       * <code>string phone = 2;</code>
        */
-      public Builder setUserId(int value) {
-        
-        userId_ = value;
+      public com.google.protobuf.ByteString
+          getPhoneBytes() {
+        Object ref = phone_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (String) ref);
+          phone_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <pre>
+       * 用户id  
+       * </pre>
+       *
+       * <code>string phone = 2;</code>
+       */
+      public Builder setPhone(
+          String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        phone_ = value;
         onChanged();
         return this;
       }
@@ -661,11 +834,29 @@ public final class CoordinateInfo {
        * 用户id  
        * </pre>
        *
-       * <code>int32 userId = 2;</code>
+       * <code>string phone = 2;</code>
        */
-      public Builder clearUserId() {
+      public Builder clearPhone() {
         
-        userId_ = 0;
+        phone_ = getDefaultInstance().getPhone();
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * 用户id  
+       * </pre>
+       *
+       * <code>string phone = 2;</code>
+       */
+      public Builder setPhoneBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        phone_ = value;
         onChanged();
         return this;
       }
@@ -796,6 +987,159 @@ public final class CoordinateInfo {
         onChanged();
         return this;
       }
+
+      private com.google.protobuf.Timestamp time_ = null;
+      private com.google.protobuf.SingleFieldBuilderV3<
+          com.google.protobuf.Timestamp, com.google.protobuf.Timestamp.Builder, com.google.protobuf.TimestampOrBuilder> timeBuilder_;
+      /**
+       * <pre>
+       *时间
+       * </pre>
+       *
+       * <code>.google.protobuf.Timestamp Time = 5;</code>
+       */
+      public boolean hasTime() {
+        return timeBuilder_ != null || time_ != null;
+      }
+      /**
+       * <pre>
+       *时间
+       * </pre>
+       *
+       * <code>.google.protobuf.Timestamp Time = 5;</code>
+       */
+      public com.google.protobuf.Timestamp getTime() {
+        if (timeBuilder_ == null) {
+          return time_ == null ? com.google.protobuf.Timestamp.getDefaultInstance() : time_;
+        } else {
+          return timeBuilder_.getMessage();
+        }
+      }
+      /**
+       * <pre>
+       *时间
+       * </pre>
+       *
+       * <code>.google.protobuf.Timestamp Time = 5;</code>
+       */
+      public Builder setTime(com.google.protobuf.Timestamp value) {
+        if (timeBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          time_ = value;
+          onChanged();
+        } else {
+          timeBuilder_.setMessage(value);
+        }
+
+        return this;
+      }
+      /**
+       * <pre>
+       *时间
+       * </pre>
+       *
+       * <code>.google.protobuf.Timestamp Time = 5;</code>
+       */
+      public Builder setTime(
+          com.google.protobuf.Timestamp.Builder builderForValue) {
+        if (timeBuilder_ == null) {
+          time_ = builderForValue.build();
+          onChanged();
+        } else {
+          timeBuilder_.setMessage(builderForValue.build());
+        }
+
+        return this;
+      }
+      /**
+       * <pre>
+       *时间
+       * </pre>
+       *
+       * <code>.google.protobuf.Timestamp Time = 5;</code>
+       */
+      public Builder mergeTime(com.google.protobuf.Timestamp value) {
+        if (timeBuilder_ == null) {
+          if (time_ != null) {
+            time_ =
+              com.google.protobuf.Timestamp.newBuilder(time_).mergeFrom(value).buildPartial();
+          } else {
+            time_ = value;
+          }
+          onChanged();
+        } else {
+          timeBuilder_.mergeFrom(value);
+        }
+
+        return this;
+      }
+      /**
+       * <pre>
+       *时间
+       * </pre>
+       *
+       * <code>.google.protobuf.Timestamp Time = 5;</code>
+       */
+      public Builder clearTime() {
+        if (timeBuilder_ == null) {
+          time_ = null;
+          onChanged();
+        } else {
+          time_ = null;
+          timeBuilder_ = null;
+        }
+
+        return this;
+      }
+      /**
+       * <pre>
+       *时间
+       * </pre>
+       *
+       * <code>.google.protobuf.Timestamp Time = 5;</code>
+       */
+      public com.google.protobuf.Timestamp.Builder getTimeBuilder() {
+        
+        onChanged();
+        return getTimeFieldBuilder().getBuilder();
+      }
+      /**
+       * <pre>
+       *时间
+       * </pre>
+       *
+       * <code>.google.protobuf.Timestamp Time = 5;</code>
+       */
+      public com.google.protobuf.TimestampOrBuilder getTimeOrBuilder() {
+        if (timeBuilder_ != null) {
+          return timeBuilder_.getMessageOrBuilder();
+        } else {
+          return time_ == null ?
+              com.google.protobuf.Timestamp.getDefaultInstance() : time_;
+        }
+      }
+      /**
+       * <pre>
+       *时间
+       * </pre>
+       *
+       * <code>.google.protobuf.Timestamp Time = 5;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilderV3<
+          com.google.protobuf.Timestamp, com.google.protobuf.Timestamp.Builder, com.google.protobuf.TimestampOrBuilder> 
+          getTimeFieldBuilder() {
+        if (timeBuilder_ == null) {
+          timeBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+              com.google.protobuf.Timestamp, com.google.protobuf.Timestamp.Builder, com.google.protobuf.TimestampOrBuilder>(
+                  getTime(),
+                  getParentForChildren(),
+                  isClean());
+          time_ = null;
+        }
+        return timeBuilder_;
+      }
       @Override
       public final Builder setUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
@@ -863,10 +1207,12 @@ public final class CoordinateInfo {
       descriptor;
   static {
     String[] descriptorData = {
-      "\n\020Coordinate.proto\"N\n\rCoordinateMsg\022\n\n\002i" +
-      "d\030\001 \001(\005\022\016\n\006userId\030\002 \001(\005\022\022\n\ncoordinate\030\003 " +
-      "\001(\t\022\r\n\005state\030\004 \001(\005B/\n\035com.dzg.springarcg" +
-      "is.protobufB\016CoordinateInfob\006proto3"
+      "\n\020Coordinate.proto\032\017timestamp.proto\"w\n\rC" +
+      "oordinateMsg\022\n\n\002id\030\001 \001(\005\022\r\n\005phone\030\002 \001(\t\022" +
+      "\022\n\ncoordinate\030\003 \001(\t\022\r\n\005state\030\004 \001(\005\022(\n\004Ti" +
+      "me\030\005 \001(\0132\032.google.protobuf.TimestampB/\n\035" +
+      "com.dzg.springarcgis.protobufB\016Coordinat" +
+      "eInfoP\000b\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -879,13 +1225,15 @@ public final class CoordinateInfo {
     com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
+          com.google.protobuf.TimestampProto.getDescriptor(),
         }, assigner);
     internal_static_CoordinateMsg_descriptor =
       getDescriptor().getMessageTypes().get(0);
     internal_static_CoordinateMsg_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_CoordinateMsg_descriptor,
-        new String[] { "Id", "UserId", "Coordinate", "State", });
+        new String[] { "Id", "Phone", "Coordinate", "State", "Time", });
+    com.google.protobuf.TimestampProto.getDescriptor();
   }
 
   // @@protoc_insertion_point(outer_class_scope)
