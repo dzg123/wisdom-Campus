@@ -1,47 +1,36 @@
 package com.dzg.springarcgis.websocket;
 
 import com.dzg.springarcgis.config.MyEndpointConfigure;
-import com.dzg.springarcgis.domain.Location;
-import com.dzg.springarcgis.mapper.LocationMapper;
-import com.dzg.springarcgis.netty.NettyServerHandler;
-import com.dzg.springarcgis.service.impl.LocationServiceImpl;
-import com.dzg.springarcgis.util.IpUtil;
-import com.dzg.springarcgis.util.SpringUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import javax.websocket.*;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
-import java.util.Date;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 @Slf4j
 @ServerEndpoint(value = "/websocket/{id}", configurator = MyEndpointConfigure.class)
 @Component
+@Scope(value = "prototype")
 public class WebSocketServer {
 
     //静态变量，用来记录当前在线连接数。应该把它设计成线程安全的。
     private static int onlineCount = 0;
     //concurrent包的线程安全Set，用来存放每个客户端对应的MyWebSocket对象。
 //    private static CopyOnWriteArrayList<WebSocketServer> webSocketSet = new CopyOnWriteArrayList<>();
-    public static ConcurrentHashMap<String, WebSocketServer> webSocketSet = new ConcurrentHashMap<>();
+    public static ConcurrentHashMap<Integer, WebSocketServer> webSocketSet = new ConcurrentHashMap<>();
     //与某个客户端的连接会话，需要通过它来给客户端发送数据
     private Session session;
-    public static String id = "";
-    @Autowired
-    private MyEndpointConfigure myEndpointConfigure;
+    public static Integer id ;
 
     /**
      * 连接建立成功调用的方法
      */
     @OnOpen
-    public void onOpen(@PathParam(value = "id") String id, Session session) {
+    public void onOpen(@PathParam(value = "id") Integer id, Session session) {
         this.id = id;//接收到发送消息的人员编号
         this.session = session;
         webSocketSet.put(id, this);
@@ -62,11 +51,6 @@ public class WebSocketServer {
         webSocketSet.remove(this);
         subOnlineCount();
         log.info("有一连接关闭！当前在线人数为" + getOnlineCount());
-//        try {
-////            sendMessage(session.getId());
-//        } catch (IOException e) {
-//            System.out.println("errors"+e);
-//        }
     }
 
     /**
@@ -84,7 +68,7 @@ public class WebSocketServer {
         if (sendUserId.equals("0"))
             sendToAll(sendMessage);
         else
-            sendToUser(sendMessage, sendUserId);
+            sendToUser(sendMessage, Integer.valueOf(sendUserId));
 
 
     }
@@ -104,21 +88,22 @@ public class WebSocketServer {
             session.getBasicRemote().sendText(message);
             return;
         }
-        ExecutorService threadPool = Executors.newFixedThreadPool(100);
-        Runnable task = new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    System.out.println("要发送的消息：" + message);
-
-                    session.getBasicRemote().sendText(message);
-                } catch (Exception e) {
-                    System.out.println("发生错误：" + e);
-                }
-
-            }
-        };
-        threadPool.submit(task);
+//        ExecutorService threadPool = Executors.newFixedThreadPool(100);
+//        Runnable task = new Runnable() {
+//            @Override
+//            public void run() {
+//                try {
+//                    System.out.println("要发送的消息：" + message);
+//
+//                    session.getBasicRemote().sendText(message);
+//                } catch (Exception e) {
+//                    System.out.println("发生错误：" + e);
+//                }
+//
+//            }
+//        };
+//        threadPool.submit(task);
+        session.getBasicRemote().sendText(message);
     }
 
     /**
@@ -128,7 +113,7 @@ public class WebSocketServer {
      * @param sendUserId
      * @throws IOException
      */
-    public void sendToUser(String message, String sendUserId) {
+    public void sendToUser(String message, Integer sendUserId) {
         if (webSocketSet.get(sendUserId) != null) {
             try {
                 if (!id.equals(sendUserId)) {
@@ -155,7 +140,7 @@ public class WebSocketServer {
      */
     public static void sendToAll(String message) {
         log.info(message);
-        for (String key : webSocketSet.keySet()) {
+        for (Integer key : webSocketSet.keySet()) {
             try {
                 webSocketSet.get(key).sendMessage(message);
             } catch (Exception e) {
